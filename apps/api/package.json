@@ -1,0 +1,11 @@
+{
+  "name": "@futbiz/api",
+  "private": true,
+  "scripts": {
+    "dev": "supabase start",
+    "login": "supabase login"
+  },
+  "dependencies": {
+    "supabase": "^1.191.3"
+  }
+}
