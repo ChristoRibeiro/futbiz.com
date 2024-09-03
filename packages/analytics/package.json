@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@futbiz/logger": "workspace:*",
-    "@vercel/functions": "^1.4.1",
-    "@openpanel/nextjs": "^1.0.0"
+    "@openpanel/nextjs": "^1.0.0",
+    "@vercel/functions": "^1.4.1"
   },
   "exports": {
     "./server": "./src/server.ts",
