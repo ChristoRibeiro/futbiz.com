@@ -1,4 +1,5 @@
 {
+  "deno.enablePaths": ["apps/api/supabase/functions"],
   "editor.defaultFormatter": "biomejs.biome",
   "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
