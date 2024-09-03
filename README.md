@@ -91,5 +91,4 @@ bun dev:web // starts the web app in development mode
 bun dev:app // starts the app in development mode
 bun dev:api // starts the api in development mode
 bun dev:email // starts the email app in development mode
-bun dev:jobs // starts the jobs app in development mode
 ```
