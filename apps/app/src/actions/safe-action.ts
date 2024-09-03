@@ -1,9 +1,9 @@
-import * as Sentry from "@sentry/nextjs";
 import { setupAnalytics } from "@futbiz/analytics/server";
 import { ratelimit } from "@futbiz/kv/ratelimit";
 import { logger } from "@futbiz/logger";
 import { getUser } from "@futbiz/supabase/queries";
 import { createClient } from "@futbiz/supabase/server";
+import * as Sentry from "@sentry/nextjs";
 import {
   DEFAULT_SERVER_ERROR_MESSAGE,
   createSafeActionClient,
@@ -47,9 +47,9 @@ export const authActionClient = actionClientWithMeta
     const result = await next({ ctx: {} });
 
     if (process.env.NODE_ENV === "development") {
-      logger("Input ->", clientInput);
-      logger("Result ->", result.data);
-      logger("Metadata ->", metadata);
+      logger.info(`Input -> ${JSON.stringify(clientInput)}`);
+      logger.info(`Result -> ${JSON.stringify(result.data)}`);
+      logger.info(`Metadata -> ${JSON.stringify(metadata)}`);
 
       return result;
     }
