@@ -1,7 +1,7 @@
 "use server";
 
+import type { helloWorldTask } from "@futbiz/jobs/trigger/example";
 import { tasks } from "@trigger.dev/sdk/v3";
-import type { helloWorldTask } from "@futbiz/jobs/src/tasks/example";
 
 export async function myTask() {
   try {
