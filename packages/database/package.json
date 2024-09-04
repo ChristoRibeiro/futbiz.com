@@ -1,0 +1,23 @@
+{
+  "name": "@futbiz/database",
+  "version": "1.0.0",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push --skip-generate",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "5.19.1"
+  },
+  "devDependencies": {
+    "prisma": "5.19.1"
+  },
+  "prisma": {
+    "seed": "bunx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  }
+}

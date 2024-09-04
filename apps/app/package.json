@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@futbiz/analytics": "workspace:*",
+    "@futbiz/database": "workspace:*",
     "@futbiz/kv": "workspace:*",
     "@futbiz/supabase": "workspace:*",
     "@futbiz/ui": "workspace:*",

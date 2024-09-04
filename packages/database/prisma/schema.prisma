@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Contact {
+  id        String      @id @default(cuid())
+  name      String
+  email     String?     @unique
+  phone     String?
+  type      ContactType
+  deals     Deal[]
+  events    Event[]
+  notes     Note[]
+  company   Company?    @relation(fields: [companyId], references: [id])
+  companyId String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Company {
+  id        String    @id @default(cuid())
+  name      String
+  country   String
+  contacts  Contact[]
+  deals     Deal[]
+  events    Event[]
+  notes     Note[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Deal {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  value       Decimal    @db.Decimal(10, 2)
+  currency    String     @db.VarChar(3)
+  status      DealStatus
+  notes       Note[]
+  contact     Contact    @relation(fields: [contactId], references: [id])
+  contactId   String
+  company     Company    @relation(fields: [companyId], references: [id])
+  companyId   String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+  contact   Contact  @relation(fields: [contactId], references: [id])
+  contactId String
+  deal      Deal?    @relation(fields: [dealId], references: [id])
+  dealId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  type        EventType
+  description String?
+  contact     Contact?  @relation(fields: [contactId], references: [id])
+  contactId   String?
+  company     Company?  @relation(fields: [companyId], references: [id])
+  companyId   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum ContactType {
+  PLAYER
+  CLUB
+  OTHER
+}
+
+enum DealStatus {
+  LEAD
+  NEGOTIATION
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum EventType {
+  PLAYER_TRANSFER
+  OTHER
+}
