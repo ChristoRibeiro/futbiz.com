@@ -14,31 +14,61 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Contact {
-  id        String      @id @default(cuid())
+model Country {
+  id        String   @id @default(cuid())
   name      String
-  email     String?     @unique
-  phone     String?
-  type      ContactType
-  deals     Deal[]
-  events    Event[]
-  notes     Note[]
-  company   Company?    @relation(fields: [companyId], references: [id])
-  companyId String?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  leagues   League[]
+  periods   Period[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Company {
+model Period {
+  id        String   @id @default(cuid())
+  start     DateTime
+  end       DateTime
+  country   Country  @relation(fields: [countryId], references: [id])
+  countryId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model League {
+  id        String   @id @default(cuid())
+  name      String
+  country   Country  @relation(fields: [countryId], references: [id])
+  countryId String
+  clubs     Club[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Club {
   id        String    @id @default(cuid())
   name      String
-  country   String
+  league    League    @relation(fields: [leagueId], references: [id])
+  leagueId  String
   contacts  Contact[]
   deals     Deal[]
   events    Event[]
   notes     Note[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+}
+
+model Contact {
+  id        String      @id @default(cuid())
+  name      String
+  email     String?     @unique
+  phone     String?
+  type      ContactType @default(PLAYER)
+  club      Club?       @relation(fields: [clubId], references: [id])
+  clubId    String?
+  deals     Deal[]
+  events    Event[]
+  notes     Note[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 model Deal {
@@ -51,8 +81,8 @@ model Deal {
   notes       Note[]
   contact     Contact    @relation(fields: [contactId], references: [id])
   contactId   String
-  company     Company    @relation(fields: [companyId], references: [id])
-  companyId   String
+  club        Club       @relation(fields: [clubId], references: [id])
+  clubId      String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -60,8 +90,8 @@ model Deal {
 model Note {
   id        String   @id @default(cuid())
   content   String
-  company   Company? @relation(fields: [companyId], references: [id])
-  companyId String?
+  club      Club?    @relation(fields: [clubId], references: [id])
+  clubId    String?
   contact   Contact  @relation(fields: [contactId], references: [id])
   contactId String
   deal      Deal?    @relation(fields: [dealId], references: [id])
@@ -76,15 +106,14 @@ model Event {
   description String?
   contact     Contact?  @relation(fields: [contactId], references: [id])
   contactId   String?
-  company     Company?  @relation(fields: [companyId], references: [id])
-  companyId   String?
+  club        Club?     @relation(fields: [clubId], references: [id])
+  clubId      String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
 
 enum ContactType {
   PLAYER
-  CLUB
   OTHER
 }
 

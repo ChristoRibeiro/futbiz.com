@@ -1,14 +1,15 @@
 import "@futbiz/ui/globals.css";
-import { Footer } from "@/components/footer";
+import { I18nProviderClient } from "@/locales/client";
 import { cn } from "@futbiz/ui/cn";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
+import type React from "react";
 
 export const metadata: Metadata = {
-  title: "Create v1",
-  description: "Production ready Next.js app",
+  title: "Futbiz",
+  description: "",
 };
 
 export const viewport = {
@@ -20,8 +21,10 @@ export const viewport = {
 
 export default function RootLayout({
   children,
+  params: { locale },
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -33,13 +36,11 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-
-          <Footer />
+          <I18nProviderClient locale={locale}>{children}</I18nProviderClient>
         </ThemeProvider>
       </body>
     </html>

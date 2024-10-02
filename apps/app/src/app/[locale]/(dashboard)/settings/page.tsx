@@ -1,22 +1,49 @@
-import { UsersLoading } from "@/components/users.loading";
-import { UsersServer } from "@/components/users.server";
-import { db } from "@futbiz/database";
-import type { Metadata } from "next";
-import { Suspense } from "react";
+import { ButtonSignOut } from "@/components/button-signout"
+import { getScopedI18n } from "@/locales/server"
+import { getUser } from "@futbiz/supabase/queries"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@futbiz/ui/card"
+import { Separator } from "@futbiz/ui/separator"
+import { redirect } from "next/navigation"
 
-export const metadata: Metadata = {
-  title: "Settings",
-  description: "Settings",
-};
+export async function generateMetadata() {
+  const t = await getScopedI18n("settings")
+  return {
+    title: `Futbiz - ${t("title")}`,
+  }
+}
 
 export default async function Page() {
-  const companies = await db.company.findMany();
+  const t = await getScopedI18n("settings")
+  const { user } = await getUser()
+
+  if (!user) {
+    redirect("/login")
+  }
+
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
-      <pre>{JSON.stringify(companies, null, 2)}</pre>
-      <Suspense fallback={<UsersLoading />}>
-        <UsersServer />
-      </Suspense>
-    </div>
-  );
+    <>
+      <h3 className="text-2xl font-bold">{t("title")}</h3>
+
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Informations du compte</CardTitle>
+          <CardDescription>
+            Gérez les informations de votre compte
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">{user.email}</p>
+        </CardContent>
+      </Card>
+
+      <Separator className="my-4" />
+      <ButtonSignOut />
+    </>
+  )
 }

@@ -1,13 +1,31 @@
-import "./src/env.mjs";
-import { withSentryConfig } from "@sentry/nextjs";
+import "./src/env.mjs"
+import { withSentryConfig } from "@sentry/nextjs"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@futbiz/supabase"],
+  transpilePackages: ["@futbiz/supabase", "@futbiz/ui"],
   experimental: {
     instrumentationHook: process.env.NODE_ENV === "production",
   },
-};
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+      },
+    ],
+  },
+  redirects: async () => {
+    return [
+      {
+        source: "/",
+        destination: "/deals",
+        permanent: true,
+      },
+    ]
+  },
+}
 
 export default withSentryConfig(nextConfig, {
   silent: !process.env.CI,
@@ -16,4 +34,4 @@ export default withSentryConfig(nextConfig, {
   hideSourceMaps: true,
   disableLogger: true,
   tunnelRoute: "/monitoring",
-});
+})

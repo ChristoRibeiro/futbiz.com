@@ -1,22 +1,9 @@
-import { SignOut } from "@/components/sign-out";
-import { getI18n } from "@/locales/server";
-import { getUser } from "@futbiz/supabase/queries";
-
-export const metadata = {
-  title: "Home",
-};
+import { getScopedI18n } from "@/locales/server"
+import { routes } from "@/navigation"
+import Link from "next/link"
 
 export default async function Page() {
-  const { data } = await getUser();
-  const t = await getI18n();
+  const t = await getScopedI18n("deals")
 
-  return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <p>{t("welcome", { name: data?.user?.email })}</p>
-
-        <SignOut />
-      </div>
-    </div>
-  );
+  return <Link href={routes.deals()}>{t("title")} →</Link>
 }

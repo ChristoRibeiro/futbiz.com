@@ -22,6 +22,6 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
-
+  console.log("redirecting to", `${origin}${next}`);
   return NextResponse.redirect(`${origin}?error=auth-code-error`);
 }

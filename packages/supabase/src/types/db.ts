@@ -9,33 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      Company: {
+      Club: {
         Row: {
-          country: string
           createdAt: string
           id: string
+          leagueId: string
           name: string
           updatedAt: string
         }
         Insert: {
-          country: string
           createdAt?: string
           id: string
+          leagueId: string
           name: string
           updatedAt: string
         }
         Update: {
-          country?: string
           createdAt?: string
           id?: string
+          leagueId?: string
           name?: string
           updatedAt?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "Club_leagueId_fkey"
+            columns: ["leagueId"]
+            isOneToOne: false
+            referencedRelation: "League"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       Contact: {
         Row: {
-          companyId: string | null
+          clubId: string | null
           createdAt: string
           email: string | null
           id: string
@@ -45,17 +53,17 @@ export type Database = {
           updatedAt: string
         }
         Insert: {
-          companyId?: string | null
+          clubId?: string | null
           createdAt?: string
           email?: string | null
           id: string
           name: string
           phone?: string | null
-          type: Database["public"]["Enums"]["ContactType"]
+          type?: Database["public"]["Enums"]["ContactType"]
           updatedAt: string
         }
         Update: {
-          companyId?: string | null
+          clubId?: string | null
           createdAt?: string
           email?: string | null
           id?: string
@@ -66,17 +74,38 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Contact_companyId_fkey"
-            columns: ["companyId"]
+            foreignKeyName: "Contact_clubId_fkey"
+            columns: ["clubId"]
             isOneToOne: false
-            referencedRelation: "Company"
+            referencedRelation: "Club"
             referencedColumns: ["id"]
           },
         ]
       }
+      Country: {
+        Row: {
+          createdAt: string
+          id: string
+          name: string
+          updatedAt: string
+        }
+        Insert: {
+          createdAt?: string
+          id: string
+          name: string
+          updatedAt: string
+        }
+        Update: {
+          createdAt?: string
+          id?: string
+          name?: string
+          updatedAt?: string
+        }
+        Relationships: []
+      }
       Deal: {
         Row: {
-          companyId: string
+          clubId: string
           contactId: string
           createdAt: string
           currency: string
@@ -88,7 +117,7 @@ export type Database = {
           value: number
         }
         Insert: {
-          companyId: string
+          clubId: string
           contactId: string
           createdAt?: string
           currency: string
@@ -100,7 +129,7 @@ export type Database = {
           value: number
         }
         Update: {
-          companyId?: string
+          clubId?: string
           contactId?: string
           createdAt?: string
           currency?: string
@@ -113,10 +142,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Deal_companyId_fkey"
-            columns: ["companyId"]
+            foreignKeyName: "Deal_clubId_fkey"
+            columns: ["clubId"]
             isOneToOne: false
-            referencedRelation: "Company"
+            referencedRelation: "Club"
             referencedColumns: ["id"]
           },
           {
@@ -130,7 +159,7 @@ export type Database = {
       }
       Event: {
         Row: {
-          companyId: string | null
+          clubId: string | null
           contactId: string | null
           createdAt: string
           description: string | null
@@ -139,7 +168,7 @@ export type Database = {
           updatedAt: string
         }
         Insert: {
-          companyId?: string | null
+          clubId?: string | null
           contactId?: string | null
           createdAt?: string
           description?: string | null
@@ -148,7 +177,7 @@ export type Database = {
           updatedAt: string
         }
         Update: {
-          companyId?: string | null
+          clubId?: string | null
           contactId?: string | null
           createdAt?: string
           description?: string | null
@@ -158,10 +187,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Event_companyId_fkey"
-            columns: ["companyId"]
+            foreignKeyName: "Event_clubId_fkey"
+            columns: ["clubId"]
             isOneToOne: false
-            referencedRelation: "Company"
+            referencedRelation: "Club"
             referencedColumns: ["id"]
           },
           {
@@ -173,9 +202,41 @@ export type Database = {
           },
         ]
       }
+      League: {
+        Row: {
+          countryId: string
+          createdAt: string
+          id: string
+          name: string
+          updatedAt: string
+        }
+        Insert: {
+          countryId: string
+          createdAt?: string
+          id: string
+          name: string
+          updatedAt: string
+        }
+        Update: {
+          countryId?: string
+          createdAt?: string
+          id?: string
+          name?: string
+          updatedAt?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "League_countryId_fkey"
+            columns: ["countryId"]
+            isOneToOne: false
+            referencedRelation: "Country"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Note: {
         Row: {
-          companyId: string | null
+          clubId: string | null
           contactId: string
           content: string
           createdAt: string
@@ -184,7 +245,7 @@ export type Database = {
           updatedAt: string
         }
         Insert: {
-          companyId?: string | null
+          clubId?: string | null
           contactId: string
           content: string
           createdAt?: string
@@ -193,7 +254,7 @@ export type Database = {
           updatedAt: string
         }
         Update: {
-          companyId?: string | null
+          clubId?: string | null
           contactId?: string
           content?: string
           createdAt?: string
@@ -203,10 +264,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Note_companyId_fkey"
-            columns: ["companyId"]
+            foreignKeyName: "Note_clubId_fkey"
+            columns: ["clubId"]
             isOneToOne: false
-            referencedRelation: "Company"
+            referencedRelation: "Club"
             referencedColumns: ["id"]
           },
           {
@@ -225,6 +286,41 @@ export type Database = {
           },
         ]
       }
+      Period: {
+        Row: {
+          countryId: string
+          createdAt: string
+          end: string
+          id: string
+          start: string
+          updatedAt: string
+        }
+        Insert: {
+          countryId: string
+          createdAt?: string
+          end: string
+          id: string
+          start: string
+          updatedAt: string
+        }
+        Update: {
+          countryId?: string
+          createdAt?: string
+          end?: string
+          id?: string
+          start?: string
+          updatedAt?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Period_countryId_fkey"
+            columns: ["countryId"]
+            isOneToOne: false
+            referencedRelation: "Country"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -233,7 +329,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      ContactType: "PLAYER" | "CLUB" | "OTHER"
+      ContactType: "PLAYER" | "OTHER"
       DealStatus: "LEAD" | "NEGOTIATION" | "CLOSED_WON" | "CLOSED_LOST"
       EventType: "PLAYER_TRANSFER" | "OTHER"
     }
