@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "supabase:login": "supabase login",
+    "supabase:generate": "supabase gen types --lang=typescript --project-id ihryibecslapugyrapok --schema public > src/types/db.ts",
+    "supabase:migrate": "supabase migration up",
+    "supabase:seed": "supabase db seed generate && supabase db seed run",
+    "supabase:reset": "supabase db reset",
     "clean": "rm -rf .turbo node_modules",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "typecheck": "tsc --noEmit",
-    "db:generate": "supabase gen types --lang=typescript --project-id ihryibecslapugyrapok --schema public > src/types/db.ts"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@futbiz/logger": "workspace:*",

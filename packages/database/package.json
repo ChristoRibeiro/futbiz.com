@@ -2,11 +2,11 @@
   "name": "@futbiz/database",
   "version": "1.0.0",
   "scripts": {
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:push": "prisma db push --skip-generate",
-    "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "database:generate": "prisma generate",
+    "database:migrate": "prisma migrate dev",
+    "database:push": "prisma db push --skip-generate",
+    "database:seed": "prisma db seed",
+    "database:studio": "prisma studio"
   },
   "exports": {
     ".": "./src/index.ts"

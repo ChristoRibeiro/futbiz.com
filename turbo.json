@@ -30,7 +30,7 @@
       ],
       "dependsOn": [
         "^build",
-        "^db:generate"
+        "^generate"
       ],
       "outputs": [
         ".next/**",
@@ -47,7 +47,7 @@
     },
     "dev": {
       "dependsOn": [
-        "^db:generate"
+        "^generate"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -73,10 +73,7 @@
         "node_modules/.cache/tsbuildinfo.json"
       ]
     },
-    "db:generate": {
-      "cache": false
-    },
-    "db:push": {
+    "generate": {
       "cache": false
     }
   }
