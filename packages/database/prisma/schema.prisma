@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  seed     = "prisma/seed.ts"
 }
 
 datasource db {
@@ -14,117 +15,140 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Country {
-  id        String   @id @default(cuid())
-  name      String
-  leagues   League[]
-  periods   Period[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// ===================== //
+// ===================== //
+// TENANT TABLES
+// ===================== //
+// ===================== //
+//
+// Tenant, User...
+//
+
+model Tenant {
+  id           String    @id @default(cuid())
+  name         String
+  address      String?
+  country      String?
+  website      String?
+  email        String?
+  contactTypes String[]
+  dealStatuses String[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  clubs        Club[]
+  contacts     Contact[]
+  deals        Deal[]
+  users        User[]
+  // ownedBy   Account? @relation(fields: [ownedById], references: [id])
+  // ownedById String?
 }
 
-model Period {
-  id        String   @id @default(cuid())
-  start     DateTime
-  end       DateTime
-  country   Country  @relation(fields: [countryId], references: [id])
-  countryId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// No email here because we use Supabase Auth (auth.users contains the email).
+// Id is the Supabase auth.users.id, automatically set by a Supabase Auth Hook.
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  createdDeals Deal[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tenantId     String
+  authId       String   @unique
 }
 
-model League {
-  id        String   @id @default(cuid())
-  name      String
-  country   Country  @relation(fields: [countryId], references: [id])
-  countryId String
-  clubs     Club[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+// ===================== //
+// ===================== //
+// CRM TABLES 
+// ===================== //
+// ===================== //
+//
+// Company, Contact, Deal...
+//
 
 model Club {
   id        String    @id @default(cuid())
   name      String
-  league    League    @relation(fields: [leagueId], references: [id])
-  leagueId  String
+  address   String?
   contacts  Contact[]
   deals     Deal[]
-  events    Event[]
-  notes     Note[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  country   Country?  @relation(fields: [countryId], references: [id])
+  countryId String?
+  tenant    Tenant    @relation(fields: [tenantId], references: [id])
+  tenantId  String
 }
 
 model Contact {
-  id        String      @id @default(cuid())
+  id        String   @id @default(cuid())
+  type      String
   name      String
-  email     String?     @unique
+  email     String?
   phone     String?
-  type      ContactType @default(PLAYER)
-  club      Club?       @relation(fields: [clubId], references: [id])
-  clubId    String?
+  address   String?
+  country   String?
   deals     Deal[]
-  events    Event[]
-  notes     Note[]
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  club      Club     @relation(fields: [clubId], references: [id])
+  clubId    String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+
+  @@unique([email, tenantId])
 }
 
 model Deal {
-  id          String     @id @default(cuid())
-  title       String
-  description String?
-  value       Decimal    @db.Decimal(10, 2)
-  currency    String     @db.VarChar(3)
-  status      DealStatus
-  notes       Note[]
-  contact     Contact    @relation(fields: [contactId], references: [id])
-  contactId   String
-  club        Club       @relation(fields: [clubId], references: [id])
-  clubId      String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id              String    @id @default(cuid())
+  status          String
+  name            String
+  description     String?
+  value           Float
+  currency        Currency? @default(EUR)
+  createdBy       User      @relation(fields: [createdByUserId], references: [id])
+  createdByUserId String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  club            Club      @relation(fields: [clubId], references: [id])
+  clubId          String
+  tenant          Tenant    @relation(fields: [tenantId], references: [id])
+  tenantId        String
+  Contact         Contact?  @relation(fields: [contactId], references: [id])
+  contactId       String?
 }
 
-model Note {
+enum Currency {
+  EUR
+}
+
+// ===================== //
+// ===================== //
+// MARKET (READ ONLY)
+// ===================== //
+// ===================== //
+//
+// A Club belongs to a League.
+// A League belongs to a Country.
+// A Country has many TransfertPeriods.
+// See: https://www.transfermarkt.fr/transfer-statistik/transferfenster/statistik/stat/plus/0
+
+model League {
+  id        String    @id @default(cuid())
+  countries Country[]
+}
+
+model Country {
+  id               String            @id
+  clubs            Club[]
+  transfertPeriods TransfertPeriod[]
+  league           League            @relation(fields: [leagueId], references: [id])
+  leagueId         String
+}
+
+model TransfertPeriod {
   id        String   @id @default(cuid())
-  content   String
-  club      Club?    @relation(fields: [clubId], references: [id])
-  clubId    String?
-  contact   Contact  @relation(fields: [contactId], references: [id])
-  contactId String
-  deal      Deal?    @relation(fields: [dealId], references: [id])
-  dealId    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Event {
-  id          String    @id @default(cuid())
-  type        EventType
-  description String?
-  contact     Contact?  @relation(fields: [contactId], references: [id])
-  contactId   String?
-  club        Club?     @relation(fields: [clubId], references: [id])
-  clubId      String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-
-enum ContactType {
-  PLAYER
-  OTHER
-}
-
-enum DealStatus {
-  LEAD
-  NEGOTIATION
-  CLOSED_WON
-  CLOSED_LOST
-}
-
-enum EventType {
-  PLAYER_TRANSFER
-  OTHER
+  from      DateTime
+  to        DateTime
+  country   Country  @relation(fields: [countryId], references: [id])
+  countryId String
 }

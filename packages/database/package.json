@@ -2,19 +2,22 @@
   "name": "@futbiz/database",
   "version": "1.0.0",
   "scripts": {
-    "database:generate": "prisma generate",
-    "database:migrate": "prisma migrate dev",
-    "database:push": "prisma db push --skip-generate",
-    "database:seed": "prisma db seed",
-    "database:studio": "prisma studio"
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
+    "push": "prisma db push --skip-generate",
+    "seed": "prisma db seed",
+    "studio": "prisma studio"
   },
   "exports": {
-    ".": "./src/index.ts"
+    "./db": "./src/db.ts",
+    "./data": "./src/data.ts"
   },
   "dependencies": {
-    "@prisma/client": "5.20.0"
+    "@prisma/client": "5.20.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.0.3",
     "prisma": "5.20.0"
   },
   "prisma": {

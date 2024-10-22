@@ -1,13 +1,18 @@
 import { createNavigationConfig } from "next-safe-navigation"
+import { z } from "zod"
 
-export const { routes, useSafeParams, useSafeSearchParams } =
-  createNavigationConfig((defineRoute) => ({
-    // Public
-    login: defineRoute("/login"),
+export const { routes, useSafeParams, useSafeSearchParams } = createNavigationConfig((defineRoute) => ({
+  // Public
+  login: defineRoute("/login"),
 
-    // Dashboard
-    clubs: defineRoute("/clubs"),
-    deals: defineRoute("/deals"),
-    players: defineRoute("/players"),
-    settings: defineRoute("/settings"),
-  }))
+  // Dashboard
+  deals: defineRoute("/"),
+  clubs: defineRoute("/clubs"),
+  players: defineRoute("/players"),
+  market: defineRoute("/market", {
+    search: z.object({
+      sort: z.enum(["country-asc", "country-desc", "period-asc", "period-desc"]).default("period-asc"),
+    }),
+  }),
+  settings: defineRoute("/settings"),
+}))

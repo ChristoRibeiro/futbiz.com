@@ -1,9 +1,16 @@
 import { getScopedI18n } from "@/locales/server"
-import { routes } from "@/navigation"
-import Link from "next/link"
+
+export async function generateMetadata() {
+  const t = await getScopedI18n("deals")
+  return {
+    title: t("title"),
+  }
+}
 
 export default async function Page() {
-  const t = await getScopedI18n("deals")
-
-  return <Link href={routes.deals()}>{t("title")} →</Link>
+  return (
+    <div>
+      <h1>Deals</h1>
+    </div>
+  )
 }

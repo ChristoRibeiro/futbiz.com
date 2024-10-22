@@ -16,15 +16,6 @@ const nextConfig = {
       },
     ],
   },
-  redirects: async () => {
-    return [
-      {
-        source: "/",
-        destination: "/deals",
-        permanent: true,
-      },
-    ]
-  },
 }
 
 export default withSentryConfig(nextConfig, {
