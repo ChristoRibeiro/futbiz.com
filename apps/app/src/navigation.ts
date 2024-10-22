@@ -10,9 +10,11 @@ export const { routes, useSafeParams, useSafeSearchParams } = createNavigationCo
   clubs: defineRoute("/clubs"),
   players: defineRoute("/players"),
   market: defineRoute("/market", {
-    search: z.object({
-      sort: z.enum(["country-asc", "country-desc", "period-asc", "period-desc"]).default("period-asc"),
-    }),
+    search: z
+      .object({
+        sort: z.enum(["country-asc", "country-desc", "period-asc", "period-desc"]).default("period-asc"),
+      })
+      .optional(),
   }),
   settings: defineRoute("/settings"),
 }))

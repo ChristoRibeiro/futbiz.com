@@ -20,13 +20,13 @@ export async function TableTransfertPeriodsServer({
   const t = await getScopedI18n("table-transfert-periods")
   const periods = await getTransfertPeriods({
     orderBy: {
-      from: searchParams.sort === "period-asc" ? "asc" : searchParams.sort === "period-desc" ? "desc" : undefined,
-      countryId: searchParams.sort === "country-asc" ? "asc" : searchParams.sort === "country-desc" ? "desc" : undefined,
+      from: searchParams?.sort === "period-asc" ? "asc" : searchParams?.sort === "period-desc" ? "desc" : undefined,
+      countryId: searchParams?.sort === "country-asc" ? "asc" : searchParams?.sort === "country-desc" ? "desc" : undefined,
     },
   })
 
   const rows = periods.map(({ id, countryId, from, to }) => {
-    const status = getStatus(TODAY, from, to)
+    const status = getStatus(TODAY, [from, to])
     return {
       id,
       status,
@@ -46,13 +46,13 @@ export async function TableTransfertPeriodsServer({
               className="inline-flex items-center gap-1 hover:cursor-pointer"
               href={routes.market({
                 search: {
-                  sort: searchParams.sort === "country-asc" ? "country-desc" : "country-asc",
+                  sort: searchParams?.sort === "country-asc" ? "country-desc" : "country-asc",
                 },
               })}
             >
               {t("country")}
-              {searchParams.sort === "country-desc" && <Icons.SortTextDesc className="size-4" />}
-              {searchParams.sort === "country-asc" && <Icons.SortTextAsc className="size-4" />}
+              {searchParams?.sort === "country-desc" && <Icons.SortTextDesc className="size-4" />}
+              {searchParams?.sort === "country-asc" && <Icons.SortTextAsc className="size-4" />}
             </Link>
           </TableHead>
           <TableHead>
@@ -60,13 +60,13 @@ export async function TableTransfertPeriodsServer({
               className="inline-flex items-center gap-1 hover:cursor-pointer"
               href={routes.market({
                 search: {
-                  sort: searchParams.sort === "period-asc" ? "period-desc" : "period-asc",
+                  sort: searchParams?.sort === "period-asc" ? "period-desc" : "period-asc",
                 },
               })}
             >
               {t("period")}
-              {searchParams.sort === "period-desc" && <Icons.SortNumberDesc className="size-4" />}
-              {searchParams.sort === "period-asc" && <Icons.SortNumberAsc className="size-4" />}
+              {searchParams?.sort === "period-desc" && <Icons.SortNumberDesc className="size-4" />}
+              {searchParams?.sort === "period-asc" && <Icons.SortNumberAsc className="size-4" />}
             </Link>
           </TableHead>
           <TableHead>{t("days")}</TableHead>
