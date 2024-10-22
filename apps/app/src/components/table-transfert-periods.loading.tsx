@@ -5,12 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 const ROWS = Array.from({ length: 5 }, (_, index) => index)
 
 export async function TableTransfertPeriodsLoading() {
-  const t = await getScopedI18n("market")
+  const t = await getScopedI18n("table-transfert-periods")
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{t("league")}</TableHead>
+          <TableHead>{t("status")}</TableHead>
           <TableHead>{t("country")}</TableHead>
           <TableHead>{t("period")}</TableHead>
           <TableHead>{t("days")}</TableHead>
