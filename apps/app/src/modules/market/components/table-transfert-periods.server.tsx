@@ -1,14 +1,14 @@
 import { getScopedI18n } from "@/locales/server"
+import { MarketBadge } from "@/modules/market/components/market-badge"
 import { getTransfertPeriods } from "@/modules/market/market.use-cases"
 import { getStatus } from "@/modules/market/utils/get-status"
 import { routes } from "@/navigation"
-import { Badge } from "@futbiz/ui/badge"
 import { cn } from "@futbiz/ui/cn"
 import { Icons } from "@futbiz/ui/icons"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@futbiz/ui/table"
 import { differenceInDays, format } from "date-fns"
 import Link from "next/link"
-import { Country } from "./country"
+import { Country } from "../../../components/country"
 
 const TODAY = new Date()
 
@@ -76,13 +76,13 @@ export async function TableTransfertPeriodsServer({
         {rows.map(({ id, status, countryId, period, days }) => (
           <TableRow key={id}>
             <TableCell className="w-24">
-              <Badge variant="outline">{status.toLowerCase()}</Badge>
+              <MarketBadge status={status} />
             </TableCell>
             <TableCell>
               <Country id={countryId} />
             </TableCell>
-            <TableCell className={cn("w-56", status === "CLOSED" && "opacity-50")}>{period}</TableCell>
-            <TableCell className="w-20">{days}</TableCell>
+            <TableCell className={cn("w-56", status === "closed" && "opacity-50")}>{period}</TableCell>
+            <TableCell className={cn("w-20", status === "closed" && "opacity-50")}>{days}</TableCell>
           </TableRow>
         ))}
       </TableBody>

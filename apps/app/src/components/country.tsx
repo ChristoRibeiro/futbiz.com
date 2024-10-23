@@ -67,7 +67,7 @@ type Props = {
 }
 
 /**
- * Display a country translated name with a flag.
+ * Display a country translated name (if available) with a flag.
  */
 export async function Country({ id, flag = true }: Props) {
   const t = await getI18n()

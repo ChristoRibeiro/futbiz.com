@@ -1,6 +1,6 @@
-import { TableTransfertPeriodsLoading } from "@/components/table-transfert-periods.loading"
-import { TableTransfertPeriodsServer } from "@/components/table-transfert-periods.server"
 import { getScopedI18n } from "@/locales/server"
+import { TableTransfertPeriodsLoading } from "@/modules/market/components/table-transfert-periods.loading"
+import { TableTransfertPeriodsServer } from "@/modules/market/components/table-transfert-periods.server"
 import { routes } from "@/navigation"
 import { Suspense } from "react"
 

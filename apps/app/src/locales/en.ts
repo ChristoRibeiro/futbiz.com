@@ -34,6 +34,12 @@ export default {
   "navbar.players": "Players",
   "navbar.market": "Market",
 
+  "market-badge.later": "Later",
+  "market-badge.open-soon": "Open soon",
+  "market-badge.open": "Open",
+  "market-badge.close-soon": "Close soon",
+  "market-badge.closed": "Closed",
+
   // Data
   // ==========
 
